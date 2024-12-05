@@ -12,6 +12,7 @@
 %       Column 2: Total number of items in order
 %       Column 3: Meal swipe or not meal swipe (binary)
 %       Column 4: Whether order was verbally requested (binary)
+%       Column 5: Arrival time of customer
 % 
 % **One thing to note is that technically the same random p matrix could be 
 % used throughout, but each event is independent, so I didn't want there to
@@ -104,6 +105,8 @@ end
 
 duration = 7; % Indicates the number of seconds the simulation runs for
 T = zeros(duration);
+% This is Noah's rogue version of T - see Matlab documentation to update:
+% https://www.mathworks.com/help/stats/binomial-distribution.html
 T = [0; 1; 3; 7; 3; 1; 0]; % Value of row m is the number of customers who 
                            % arrive at time t = m (**this is a dummy matrix,
                            % in theory it would be a more thought-out
