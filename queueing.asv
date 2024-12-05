@@ -7,12 +7,9 @@
 % Output:  
 %
 %       Matrix C that represents the customer basis
-%       Column 1: Total item order time (excluding payment method and verbal
-%       ordering)
-%       Column 2: Total number of items in order
-%       Column 3: Meal swipe or not meal swipe (binary)
-%       Column 4: Whether order was verbally requested (binary)
-% 
+%       Column 1: Total order time
+%          
+%
 % **One thing to note is that technically the same random p matrix could be 
 % used throughout, but each event is independent, so I didn't want there to
 % be any relationship between them, however marginal, so I generated a
