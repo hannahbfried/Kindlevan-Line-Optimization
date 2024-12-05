@@ -107,6 +107,16 @@ duration = 7; % Indicates the number of seconds the simulation runs for
 T = zeros(duration);
 % This is Noah's rogue version of T - see Matlab documentation to update:
 % https://www.mathworks.com/help/stats/binomial-distribution.html
+
+% We need to build out different binomial distrubutions using MATLAB's
+% makedist (probably). See documentation: https://www.mathworks.com/help/stats/makedist.html
+
+% The x axis will be arrival time, and the y axis will be probability of
+% one person arriving
+
+% We will extract the values at all t values over our simulation (e.g. 1 hour,
+% 3600 t values) use them to populate column 5
+
 T = [0; 1; 3; 7; 3; 1; 0]; % Value of row m is the number of customers who 
                            % arrive at time t = m (**this is a dummy matrix,
                            % in theory it would be a more thought-out
