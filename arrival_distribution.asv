@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function [T,h1] = arrival_distribution(duration,peak1,peak2,multi)
+=======
+function [T] = arrival_distribution(duration,peak1,peak2,peak1width,peak2width,multi)
+>>>>>>> ba15cbb (add params for peak width)
 
 % Inputs:
 %
@@ -24,12 +28,17 @@ function [T,h1] = arrival_distribution(duration,peak1,peak2,multi)
 % No need to understand this, but this is just ensuring the time frame is
 % broken up into seconds
 edges = zeros(1,duration);
+<<<<<<< HEAD
 for i=1:(duration+1)
+=======
+for i=1:duration
+>>>>>>> ba15cbb (add params for peak width)
     edges(i) = i-1;
 end
 
 %% Generating peak 1
 h1 = normrnd(peak1,duration/7.2,100000,1); 
+<<<<<<< HEAD
 % Default is a normal distribution of arrivals
 
 indices = find((h1)>duration);
@@ -52,6 +61,24 @@ indices = find((h1)<0);
 h1(indices) = [];
 
 [counts2] = histcounts(h2,edges);
+=======
+% before adding peak1width as a param, was set to 7.2
+
+% Default is a normal distribution of arrivals, peaking at t = 1/2 the
+% total duration time
+
+[counts1,edges] = histcounts(h1,edges);
+
+
+%% Generating peak 2
+h2 = normrnd(peak2,duration/7.2,100000,1); 
+
+
+% Default is a normal distribution of arrivals, peaking at t = 1/2 the
+% total duration time
+
+[counts2,edges] = histcounts(h2,edges);
+>>>>>>> ba15cbb (add params for peak width)
 
 %% Generating Matrix T
 if multi == 1
@@ -64,9 +91,15 @@ scaling = max(counts);
 probabilities = counts/scaling; % Creates a vector of the probabilities of 
 % a student arriving in each second
 
+<<<<<<< HEAD
 T = zeros(1,duration);
 % Now we generate matrix T used in queueing.m 
 for i=1:(duration)
+=======
+T = zeros(1,duration-1);
+% Now we generate matrix T used in queueing.m 
+for i=1:(duration-1)
+>>>>>>> ba15cbb (add params for peak width)
     random = rand(1);
     if random < probabilities(i)
         T(i) = 1;
