@@ -1,10 +1,13 @@
-function [T] = arrival_distribution(duration,peak1,peak2,multi)
+function [T] = arrival_distribution(duration,peak1,peak2,peak1width,peak2width,multi)
 
 % Inputs:
 %
 %       duration = How long the simulation runs for (sec)
 %         peak 1 = The time at which the first rush of students arrives
 %         peak 2 = The time at which the second rush of students arrives
+%         peak1width = Numerical value that scales the width of peak 1
+%         peak2width = Numerical value that scales the width of peak 2
+%               *A good base value here is 7.2*
 %          multi = How many peaks will be used:
 %                   0 = just peak 1 (treated as a single binomial
 %                   distribution)
@@ -27,8 +30,9 @@ function [T] = arrival_distribution(duration,peak1,peak2,multi)
 edges = 0:1:duration;
 
 %% Generating peak 1
-h1 = normrnd(peak1,duration/7.2,100000,1); 
-% Default is a normal distribution of arrivals
+h1 = normrnd(peak1,duration/peak1width,100000,1); 
+% Default is a normal distribution of arrivals, peaking at t = 1/2 the
+% total duration time
 
 indices = find((h1)>duration);
 h1(indices) = [];
@@ -39,8 +43,9 @@ h1(indices) = [];
 [counts1] = histcounts(h1,edges);
 
 %% Generating peak 2
-h2 = normrnd(peak2,duration/7.2,100000,1); 
-% Default is a normal distribution of arrivals
+h2 = normrnd(peak2,duration/peak2width,100000,1); 
+% Default is a normal distribution of arrivals, peaking at t = 1/2 the
+% total duration time
 
 indices = find((h2)>duration);
 h2(indices) = [];
