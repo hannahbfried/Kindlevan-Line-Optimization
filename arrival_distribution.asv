@@ -1,4 +1,4 @@
-function [T] = arrival_distribution(duration,peak1,peak2,multi)
+function [T,h1] = arrival_distribution(duration,peak1,peak2,multi)
 
 % Inputs:
 %
@@ -23,8 +23,10 @@ function [T] = arrival_distribution(duration,peak1,peak2,multi)
 
 % No need to understand this, but this is just ensuring the time frame is
 % broken up into seconds
-
-edges = 0:1:duration;
+edges = zeros(1,duration);
+for i=1:(duration+1)
+    edges(i) = i-1;
+end
 
 %% Generating peak 1
 h1 = normrnd(peak1,duration/7.2,100000,1); 
@@ -37,6 +39,7 @@ indices = find((h1)<0);
 h1(indices) = [];
 
 [counts1] = histcounts(h1,edges);
+histogram(h1)
 
 %% Generating peak 2
 h2 = normrnd(peak2,duration/7.2,100000,1); 
@@ -45,8 +48,8 @@ h2 = normrnd(peak2,duration/7.2,100000,1);
 indices = find((h2)>duration);
 h2(indices) = [];
 
-indices = find((h2)<0);
-h2(indices) = [];
+indices = find((h1)<0);
+h1(indices) = [];
 
 [counts2] = histcounts(h2,edges);
 
