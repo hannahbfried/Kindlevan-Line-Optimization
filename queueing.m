@@ -19,7 +19,7 @@
 % be any relationship between them, however marginal, so I generated a
 % different random matrix for the construction of each column.**
 
-n = 50;
+n = sum(T);
 C = zeros(n,5);
 
 % C's first column depends on its second column, so I will fix the second
@@ -103,8 +103,8 @@ end
 
 % The fifth column includes the time at which that given customer arrives.
 
-duration = 7; % Indicates the number of seconds the simulation runs for
-T = zeros(duration);
+% duration = 7; % Indicates the number of seconds the simulation runs for
+% T = zeros(duration);
 % This is Noah's rogue version of T - see Matlab documentation to update:
 % https://www.mathworks.com/help/stats/binomial-distribution.html
 
@@ -117,16 +117,20 @@ T = zeros(duration);
 % We will extract the values at all t values over our simulation (e.g. 1 hour,
 % 3600 t values) use them to populate column 5
 
-T = [0; 1; 3; 7; 3; 1; 0]; % Value of row m is the number of customers who 
+% T = [0; 1; 3; 7; 3; 1; 0]; % Value of row m is the number of customers who 
                            % arrive at time t = m (**this is a dummy matrix,
                            % in theory it would be a more thought-out
                            % matrix based on real probabilities, but I'll
                            % get back to that in a little bit**)
 
 i = 1;
-for t = 1:duration
+for t = 1:length(T)
     if T(t) ~= 0
         C(i:(i+T(t)-1),5) = t;
     end
     i = i + T(t);
+end
+% Normalizes 5th row of C so the first person arrives at t = 0
+for i = 1:n
+    C(i,5) = C(i,5) - C(1,5); 
 end
