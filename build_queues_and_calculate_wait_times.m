@@ -1,5 +1,11 @@
 function [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type, arrival_distribution)
 
+% NOTE: I found that people were getting stuck in the line indefinitely :)
+% We should chat about how we want to fix this, but I did sanity check that
+% shrinking the total_order_time vector fixes things
+% For now, I changed build_arrival_distribution s.t. fewer people show up
+% (which is probably the more realistic option anyway)
+
 % Inputs:
 %       customer_matrix: customer matrix built via build_customer_matrix
 %
@@ -72,18 +78,22 @@ for time = 1:length(arrival_distribution)
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end
             end
+        % here's where we'll add our other cases!
         otherwise
             "Please pass in a valid scenario type!";
     end
 
    if line_1_order_times
         line_1_head_customer_number = line_1_customer_numbers(1);
-        if arrival_time(line_1_head_customer_number) < line_1_prev_exit_time
+        line_1_head_arrival_time = arrival_time(line_1_head_customer_number);
+        line_1_head_order_time = line_1_order_times(1);
+
+        if line_1_head_arrival_time < line_1_prev_exit_time
             % wait until person ahead finishes, then place order
-            line_1_head_exit_time = line_1_prev_exit_time + line_1_order_times(1);
+            line_1_head_exit_time = line_1_prev_exit_time + line_1_head_order_time;
         else
             % arrived with no line
-            line_1_head_exit_time = arrival_time(line_1_head_customer_number) + line_1_order_times(1);
+            line_1_head_exit_time = line_1_head_arrival_time + line_1_head_order_time;
         end
 
         if time >= line_1_head_exit_time
@@ -91,17 +101,24 @@ for time = 1:length(arrival_distribution)
             line_1_order_times(1) = [];
             line_1_customer_numbers(1) = [];
             line_1_prev_exit_time = line_1_head_exit_time;
+            % calculate wait time - round numbers that are nearly 0 to zero
+            line_1_head_wait_time = round(line_1_head_exit_time - line_1_head_arrival_time  - line_1_head_order_time, 10);
+            line_1_wait_times = [line_1_wait_times line_1_head_wait_time];
+            disp(join(["exiting line 1 with wait time", line_1_head_wait_time]))
         end
     end
 
     if line_2_order_times
         line_2_head_customer_number = line_2_customer_numbers(1);
-        if arrival_time(line_2_head_customer_number) < line_2_prev_exit_time
+        line_2_head_arrival_time = arrival_time(line_2_head_customer_number);
+        line_2_head_order_time = line_2_order_times(1);
+
+        if line_2_head_arrival_time < line_2_prev_exit_time
             % wait until person ahead finishes, then place order
-            line_2_head_exit_time = line_2_prev_exit_time + line_2_order_times(1);
+            line_2_head_exit_time = line_2_prev_exit_time + line_2_head_order_time;
         else
             % arrived with no line
-            line_2_head_exit_time = arrival_time(line_2_head_customer_number) + line_2_order_times(1);
+            line_2_head_exit_time = line_2_head_arrival_time + line_2_head_order_time;
         end
 
         if time >= line_2_head_exit_time
@@ -109,11 +126,14 @@ for time = 1:length(arrival_distribution)
             line_2_order_times(1) = [];
             line_2_customer_numbers(1) = [];
             line_2_prev_exit_time = line_2_head_exit_time;
+            % calculate wait time - round numbers that are nearly 0 to zero
+            line_2_head_wait_time = round(line_2_head_exit_time - line_2_head_arrival_time  - line_2_head_order_time, 10);
+            line_2_wait_times = [line_2_wait_times line_2_head_wait_time];
+            disp(join(["exiting line 2 with wait time", line_2_head_wait_time]))
         end
     end
 
     % *** for testing
-
     % NOTE: we are only looking here at integer second values, but order
     % times are non-integer values, so remember that if sanity-checking
     % output (i.e. if the exit time looks off slightly, it's probably
@@ -126,5 +146,3 @@ for time = 1:length(arrival_distribution)
     % *** for testing
 
 end
-
-

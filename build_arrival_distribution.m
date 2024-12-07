@@ -62,7 +62,14 @@ else
     counts = counts1;
 end
 
-scaling = max(counts);
+% playing with this so that fewer people show up, making for a more
+% realistic scenario, and a scenario where people aren't stuck in the 
+% line indefinitely 
+
+% with this, we consistently get a little over 100 people in a 30 minute
+% span, which feels decently realistic to me?
+scaling = 8*max(counts);
+% scaling = max(counts); - original
 probabilities = counts/scaling; % Creates a vector of the probabilities of 
 % a student arriving in each second
 
