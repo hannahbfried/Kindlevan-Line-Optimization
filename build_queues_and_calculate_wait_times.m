@@ -1,4 +1,5 @@
 function [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type, arrival_distribution)
+
 % Inputs:
 %       customer_matrix: customer matrix built via build_customer_matrix
 %
@@ -31,32 +32,36 @@ end
 % REMEMBER: there could be no line when a customer arrives
 
 arrival_time = customer_matrix(:, 5);
+
+% to return
 line_1_wait_times = [];
 line_2_wait_times = [];
 
-switch scenario_type
-    case "Base Two Line"
+% to keep track of in loop
+customer_number = 0;
 
-        line_1_order_times = [];
-        line_2_order_times = [];
+line_1_order_times = [];
+line_2_order_times = [];
 
-        line_1_customer_numbers = [];
-        line_2_customer_numbers = [];
+line_1_customer_numbers = [];
+line_2_customer_numbers = [];
 
-        line_1_prev_exit_time = 0;
-        line_2_prev_exit_time = 0;
+line_1_prev_exit_time = 0;
+line_2_prev_exit_time = 0;
 
-        customer_number = 0;
-        for time = 1:length(arrival_distribution)
-            did_customer_arrive = arrival_distribution(time);
+for time = 1:length(arrival_distribution)
+    did_customer_arrive = arrival_distribution(time);
+    
+    switch scenario_type
+        case "Base Two Line"
             if did_customer_arrive
                 customer_number = customer_number + 1;
 
-                % for testing
+                % *** for testing
                 if time < 1000
                     disp(join(["customer arrived at time", time, "with order time", total_order_time(customer_number)]))
                 end
-                % for testing
+                % *** for testing
 
                 % if a customer has arrived, they will enter the shorter line
                 if length(line_1_order_times) < length(line_2_order_times)
@@ -67,50 +72,59 @@ switch scenario_type
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end
             end
+        otherwise
+            "Please pass in a valid scenario type!";
+    end
 
-            if line_1_order_times
-                line_1_head_customer_number = line_1_customer_numbers(1);
-                if arrival_time(line_1_head_customer_number) < line_1_prev_exit_time
-                    % wait until person ahead finishes, then place order
-                    line_1_head_exit_time = line_1_prev_exit_time + line_1_order_times(1);
-                else
-                    % arrived with no line
-                    line_1_head_exit_time = arrival_time(line_1_head_customer_number) + line_1_order_times(1);
-                end
-
-                if time >= line_1_head_exit_time
-                    % advance line
-                    line_1_order_times(1) = [];
-                    line_1_customer_numbers(1) = [];
-                    line_1_prev_exit_time = line_1_head_exit_time;
-                end
-            end
-
-            if line_2_order_times
-                line_2_head_customer_number = line_2_customer_numbers(1);
-                if arrival_time(line_2_head_customer_number) < line_2_prev_exit_time
-                    % wait until person ahead finishes, then place order
-                    line_2_head_exit_time = line_2_prev_exit_time + line_2_order_times(1);
-                else
-                    % arrived with no line
-                    line_2_head_exit_time = arrival_time(line_2_head_customer_number) + line_2_order_times(1);
-                end
-
-                if time >= line_2_head_exit_time
-                    % advance line
-                    line_2_order_times(1) = [];
-                    line_2_customer_numbers(1) = [];
-                    line_2_prev_exit_time = line_2_head_exit_time;
-                end
-            end
-
-            % for testing
-            if time < 1000
-                disp(join(["at time t = ", time, "line 1 is", line_1_order_times]))
-                disp(join(["at time t = ", time, "line 2 is", line_2_order_times]))
-            end
-            % for testing
+   if line_1_order_times
+        line_1_head_customer_number = line_1_customer_numbers(1);
+        if arrival_time(line_1_head_customer_number) < line_1_prev_exit_time
+            % wait until person ahead finishes, then place order
+            line_1_head_exit_time = line_1_prev_exit_time + line_1_order_times(1);
+        else
+            % arrived with no line
+            line_1_head_exit_time = arrival_time(line_1_head_customer_number) + line_1_order_times(1);
         end
-    otherwise
-        disp("Please enter a valid scenario type!")
+
+        if time >= line_1_head_exit_time
+            % advance line
+            line_1_order_times(1) = [];
+            line_1_customer_numbers(1) = [];
+            line_1_prev_exit_time = line_1_head_exit_time;
+        end
+    end
+
+    if line_2_order_times
+        line_2_head_customer_number = line_2_customer_numbers(1);
+        if arrival_time(line_2_head_customer_number) < line_2_prev_exit_time
+            % wait until person ahead finishes, then place order
+            line_2_head_exit_time = line_2_prev_exit_time + line_2_order_times(1);
+        else
+            % arrived with no line
+            line_2_head_exit_time = arrival_time(line_2_head_customer_number) + line_2_order_times(1);
+        end
+
+        if time >= line_2_head_exit_time
+            % advance line
+            line_2_order_times(1) = [];
+            line_2_customer_numbers(1) = [];
+            line_2_prev_exit_time = line_2_head_exit_time;
+        end
+    end
+
+    % *** for testing
+
+    % NOTE: we are only looking here at integer second values, but order
+    % times are non-integer values, so remember that if sanity-checking
+    % output (i.e. if the exit time looks off slightly, it's probably
+    % because people before them exited at non-integer times)
+
+    if time < 1000
+        disp(join(["at time t = ", time, "line 1 is", line_1_order_times]))
+        disp(join(["at time t = ", time, "line 2 is", line_2_order_times]))
+    end
+    % *** for testing
+
 end
+
+
