@@ -1,0 +1,116 @@
+function [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type, arrival_distribution)
+% Inputs:
+%       customer_matrix: customer matrix built via build_customer_matrix
+%
+% Outputs:
+%       wait_times: vector holding the wait times for all customers in
+%       our simulation
+
+% STEP 1: Build total order time
+total_food_order_time = customer_matrix(:, 1);
+meal_swipe = customer_matrix(:, 3);
+verbal_item_request = customer_matrix(:, 4);
+
+num_customers = size(customer_matrix, 1);
+
+total_order_time = zeros(1, num_customers);
+for i = 1:num_customers
+    food_order_time = total_food_order_time(i);
+    % we can change these!!
+    if meal_swipe(i)
+        pay_time = 2;
+    else
+        pay_time = 6;
+    end
+    verbal_request_time = 5*verbal_item_request(i);
+    
+    total_order_time(i) = food_order_time + pay_time + verbal_request_time;
+end
+
+% STEP 2: Calculate total wait times for different scenarios
+% REMEMBER: there could be no line when a customer arrives
+
+arrival_time = customer_matrix(:, 5);
+line_1_wait_times = [];
+line_2_wait_times = [];
+
+switch scenario_type
+    case "Base Two Line"
+
+        line_1_order_times = [];
+        line_2_order_times = [];
+
+        line_1_customer_numbers = [];
+        line_2_customer_numbers = [];
+
+        line_1_prev_exit_time = 0;
+        line_2_prev_exit_time = 0;
+
+        customer_number = 0;
+        for time = 1:length(arrival_distribution)
+            did_customer_arrive = arrival_distribution(time);
+            if did_customer_arrive
+                customer_number = customer_number + 1;
+
+                % for testing
+                if time < 1000
+                    disp(join(["customer arrived at time", time, "with order time", total_order_time(customer_number)]))
+                end
+                % for testing
+
+                % if a customer has arrived, they will enter the shorter line
+                if length(line_1_order_times) < length(line_2_order_times)
+                    line_1_order_times = [line_1_order_times total_order_time(customer_number)];
+                    line_1_customer_numbers = [line_1_customer_numbers customer_number];
+                else
+                    line_2_order_times = [line_2_order_times total_order_time(customer_number)];
+                    line_2_customer_numbers = [line_2_customer_numbers customer_number];
+                end
+            end
+
+            if line_1_order_times
+                line_1_head_customer_number = line_1_customer_numbers(1);
+                if arrival_time(line_1_head_customer_number) < line_1_prev_exit_time
+                    % wait until person ahead finishes, then place order
+                    line_1_head_exit_time = line_1_prev_exit_time + line_1_order_times(1);
+                else
+                    % arrived with no line
+                    line_1_head_exit_time = arrival_time(line_1_head_customer_number) + line_1_order_times(1);
+                end
+
+                if time >= line_1_head_exit_time
+                    % advance line
+                    line_1_order_times(1) = [];
+                    line_1_customer_numbers(1) = [];
+                    line_1_prev_exit_time = line_1_head_exit_time;
+                end
+            end
+
+            if line_2_order_times
+                line_2_head_customer_number = line_2_customer_numbers(1);
+                if arrival_time(line_2_head_customer_number) < line_2_prev_exit_time
+                    % wait until person ahead finishes, then place order
+                    line_2_head_exit_time = line_2_prev_exit_time + line_2_order_times(1);
+                else
+                    % arrived with no line
+                    line_2_head_exit_time = arrival_time(line_2_head_customer_number) + line_2_order_times(1);
+                end
+
+                if time >= line_2_head_exit_time
+                    % advance line
+                    line_2_order_times(1) = [];
+                    line_2_customer_numbers(1) = [];
+                    line_2_prev_exit_time = line_2_head_exit_time;
+                end
+            end
+
+            % for testing
+            if time < 1000
+                disp(join(["at time t = ", time, "line 1 is", line_1_order_times]))
+                disp(join(["at time t = ", time, "line 2 is", line_2_order_times]))
+            end
+            % for testing
+        end
+    otherwise
+        disp("Please enter a valid scenario type!")
+end
