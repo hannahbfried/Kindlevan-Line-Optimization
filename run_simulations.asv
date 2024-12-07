@@ -16,7 +16,8 @@ multi = [1];
 m = [0.75];
 v = [0.33];
 
-scenario_type = ["Base Two Line"];
+% 
+scenario_type = ["single line"];
 
 % num_simulations is equal to the length of all above vectors, but
 % we'll use duration to set it to make the code more readable
@@ -26,7 +27,7 @@ for i = 1:length(num_simulations)
     arrival_distribution = build_arrival_distribution(duration(i), ...
         peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
     customer_matrix = build_customer_matrix(m(i), v(i), arrival_distribution);
-    [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(i), arrival_distribution);
+    wait_times = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(i));
     % TODO: Mercera to take these wait times and analyze/visualize
 end
 
