@@ -57,18 +57,16 @@ line_2_prev_exit_time = 0;
 
 for time = 1:length(arrival_distribution)
     did_customer_arrive = arrival_distribution(time);
-    
-    switch scenario_type
-        case "Base Two Line"
-            if did_customer_arrive
-                customer_number = customer_number + 1;
+    if did_customer_arrive
+        customer_number = customer_number + 1;
+        % *** for testing
+        if time < 1000
+            disp(join(["customer arrived at time", time, "with order time", total_order_time(customer_number)]))
+        end
+        % *** for testing
 
-                % *** for testing
-                if time < 1000
-                    disp(join(["customer arrived at time", time, "with order time", total_order_time(customer_number)]))
-                end
-                % *** for testing
-
+        switch scenario_type
+            case "Base Two Line"
                 % if a customer has arrived, they will enter the shorter line
                 if length(line_1_order_times) < length(line_2_order_times)
                     line_1_order_times = [line_1_order_times total_order_time(customer_number)];
@@ -77,10 +75,10 @@ for time = 1:length(arrival_distribution)
                     line_2_order_times = [line_2_order_times total_order_time(customer_number)];
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end
-            end
-        % here's where we'll add our other cases!
-        otherwise
-            "Please pass in a valid scenario type!";
+            % here's where we'll have the other cases
+            otherwise
+                "Please enter a valid scenario type!";
+        end
     end
 
    if line_1_order_times
