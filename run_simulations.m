@@ -28,5 +28,10 @@ for i = 1:length(num_simulations)
     customer_matrix = build_customer_matrix(m(i), v(i), arrival_distribution);
     [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(i), arrival_distribution);
     % TODO: Mercera to take these wait times and analyze/visualize
+    % I think that we will want to run each simulation a bunch of times
+    % (like maybe 100? idk) because there's a lot of variation
+
+    % Would also be helpful to compute descriptive statistics
+    % Do we wanna use CLT??? I think yes
 end
 
