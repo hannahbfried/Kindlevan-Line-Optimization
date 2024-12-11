@@ -15,6 +15,7 @@ function [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wai
 
 % STEP 1: Build total order time
 total_food_order_time = customer_matrix(:, 1);
+num_items = customer_matrix(:, 2);
 meal_swipe = customer_matrix(:, 3);
 verbal_item_request = customer_matrix(:, 4);
 
@@ -65,24 +66,55 @@ for time = 1:length(arrival_distribution)
         end
         % *** for testing
 
+        % Balking
+        if length(line_1_order_times) > 25 || length(line_2_order_times) > 25 % WE CAN CHANGE FROM 25
+            continue;
+        end
+
         switch scenario_type
             case "Base Two Line"
                 % if a customer has arrived, they will enter the shorter line
                 if length(line_1_order_times) < length(line_2_order_times)
                     line_1_order_times = [line_1_order_times total_order_time(customer_number)];
-                    line_1_customer_numbers = [line_1_customer_numbers customer_number];
+                    line_1_customer_numbers = [line_1_customer_numbers customer_number]; % WOULD THIS NOT JUST BE INTEGERS 1, 2, ... 
                 else
                     line_2_order_times = [line_2_order_times total_order_time(customer_number)];
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end
-            % here's where we'll have the other cases
+            case "Express Line"
+                % Line 1 is the express line for 1 item
+                if num_items(customer_number) == 1
+                    line_1_order_times = [line_1_order_times total_order_time(customer_number)];
+                    line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
+                else
+                    line_2_order_times = [line_2_order_times total_order_time(customer_number)];
+                    line_2_customer_numbers = [line_2_customer_numbers customer_number];
+                end 
+            case "Meal Swipe Line"    
+                % Line 1 is the meal swipe line
+                if meal_swipe(customer_number)
+                    line_1_order_times = [line_1_order_times total_order_time(customer_number)];
+                    line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
+                else
+                    line_2_order_times = [line_2_order_times total_order_time(customer_number)];
+                    line_2_customer_numbers = [line_2_customer_numbers customer_number];
+                end
+            case "Verbal Request Line"
+                % Line 1 is the verbal request line
+                if verbal_item_request(customer_number)
+                    line_1_order_times = [line_1_order_times total_order_time(customer_number)];
+                    line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
+                else
+                    line_2_order_times = [line_2_order_times total_order_time(customer_number)];
+                    line_2_customer_numbers = [line_2_customer_numbers customer_number];
+                end 
             otherwise
                 "Please enter a valid scenario type!";
         end
     end
 
    if line_1_order_times
-        line_1_head_customer_number = line_1_customer_numbers(1);
+        line_1_head_customer_number = line_1_customer_numbers(1); 
         line_1_head_arrival_time = arrival_time(line_1_head_customer_number);
         line_1_head_order_time = line_1_order_times(1);
 
@@ -142,5 +174,5 @@ for time = 1:length(arrival_distribution)
         disp(join(["at time t = ", time, "line 2 is", line_2_order_times]))
     end
     % *** for testing
-
+    
 end
