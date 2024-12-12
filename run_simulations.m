@@ -18,7 +18,7 @@ multi = [1, 1, 1, 0, 0];
 m = 0.75;
 v = 0.33;
 
-scenario_types = ["Base Two Line", "Express Line", ...
+scenario_type = ["Base Two Line", "Express Line", ...
                   "Meal Swipe Line", "Verbal Request Line"];
 
 % all data will be a table of dimensions ixj
@@ -37,15 +37,15 @@ all_line_2_std_data = {};
 all_line_1_exit_data = {};
 all_line_2_exit_data = {};
 
-% TODO: need to figure out how to build customer matrix without arrival distribution
-customer_matrix = build_customer_matrix(m, v, arrival_distribution);
-
 % for every arrival distribution, run each scenario 100 times
 num_arrival_distributions = length(duration);
 for i = 1:num_arrival_distributions
     arrival_distribution = build_arrival_distribution(duration(i), ...
         peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
-    for j = 1:length(scenario_types)
+    % have one customer matrix for every arrival distribution 
+    customer_matrix = build_customer_matrix(m, v, arrival_distribution);
+
+    for j = 1:length(scenario_type)
 
         mean_line_1_wait_times_all_runs = [];
         mean_line_2_wait_times_all_runs = [];
