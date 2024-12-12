@@ -24,6 +24,7 @@ scenario_types = ["Base Two Line", "Express Line", ...
 customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
 for i = 1:length(scenario_types)
+    % fix this
     arrival_distribution = build_arrival_distribution(duration(i), ...
         peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
     [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(i), arrival_distribution);
