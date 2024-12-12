@@ -21,19 +21,64 @@ v = 0.33;
 scenario_types = ["Base Two Line", "Express Line", ...
                   "Meal Swipe Line", "Verbal Request Line"];
 
+% all data will be a table of dimensions ixj
+% every entry will house the relevant data for arrival distribution i and
+% simulation type j
+
+all_line_1_mean_data = {};
+all_line_2_mean_data = {};
+
+all_line_1_median_data = {};
+all_line_2_median_data = {};
+
+all_line_1_std_data = {};
+all_line_2_std_data = {};
+
+% TODO: need to figure out how to build customer matrix without arrival distribution
 customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
-for i = 1:length(scenario_types)
-    % fix this
+% for every arrival distribution, run each scenario 100 times
+num_arrival_distributions = length(duration);
+for i = 1:num_arrival_distributions
     arrival_distribution = build_arrival_distribution(duration(i), ...
         peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
-    [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(i), arrival_distribution);
-    
-    % TODO: Mercera to take these wait times and analyze/visualize
-    % I think that we will want to run each simulation a bunch of times
-    % (like maybe 100? idk) because there's a lot of variation
+    for j = 1:length(scenario_types)
 
-    % Would also be helpful to compute descriptive statistics
-    % Do we wanna use CLT??? I think yes
+        mean_line_1_wait_times_all_runs = [];
+        mean_line_2_wait_times_all_runs = [];
+
+        median_line_1_wait_times_all_runs = [];
+        median_line_2_wait_times_all_runs = [];
+
+        std_line_1_wait_times_all_runs = [];
+        std_line_2_wait_times_all_runs = [];
+
+        for k = 1:100
+            [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
+            
+            mean_line_1_wait_time_curr_run = mean(line_1_wait_times);
+            mean_line_2_wait_time_curr_run = mean(line_2_wait_times);
+            mean_line_1_wait_times_all_runs = [mean_line_1_wait_times_all_runs mean_line_1_wait_time_curr_run];
+            mean_line_2_wait_times_all_runs = [mean_line_2_wait_times_all_runs mean_line_2_wait_time_curr_run];
+
+            median_line_1_wait_time_curr_run = median(line_1_wait_times);
+            median_line_2_wait_time_curr_run = median(line_2_wait_times);
+            median_line_1_wait_times_all_runs = [median_line_1_wait_times_all_runs median_line_1_wait_time_curr_run];
+            median_line_2_wait_times_all_runs = [median_line_2_wait_times_all_runs median_line_2_wait_time_curr_run];
+
+            std_line_1_wait_time_curr_run = std(line_1_wait_times);
+            std_line_2_wait_time_curr_run = std(line_2_wait_times);
+            std_line_1_wait_times_all_runs = [std_line_1_wait_times_all_runs std_line_1_wait_time_curr_run];
+            std_line_2_wait_times_all_runs = [std_line_2_wait_times_all_runs std_line_2_wait_time_curr_run];
+       
+        end
+        all_line_1_mean_data(i, j) = mean_line_1_wait_times_all_runs;
+        all_line_2_mean_data(i, j) = mean_line_2_wait_times_all_runs;
+
+        all_line_1_median_data(i, j) = median_line_1_wait_times_all_runs;
+        all_line_2_median_data(i, j) = median_line_2_wait_times_all_runs;
+
+        all_line_1_std_data(i, j) = std_line_1_wait_times_all_runs;
+        all_line_2_std_data(i, j) = std_line_2_wait_times_all_runs;
+    end
 end
-

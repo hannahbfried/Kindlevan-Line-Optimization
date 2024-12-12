@@ -131,10 +131,3 @@ for t = 1:length(T)
     end
     i = i + T(t);
 end
-% Normalizes 5th row of C so the first person arrives at t = 0
-% NOAH CAN YOU TELL ME WHY YOU DID THIS??? commenting out to make the
-% model work lol
-
-% for i = 1:n
-%     C(i,5) = C(i,5) - C(1,5); 
-% end
