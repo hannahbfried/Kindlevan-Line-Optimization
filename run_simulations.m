@@ -40,9 +40,6 @@ all_line_2_exit_data = {};
 % for every arrival distribution, run each scenario 100 times
 num_arrival_distributions = length(duration);
 for i = 1:num_arrival_distributions
-    arrival_distribution = build_arrival_distribution(duration(i), ...
-        peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
-    customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
     for j = 1:length(scenario_type)
 
@@ -59,6 +56,11 @@ for i = 1:num_arrival_distributions
         num_exited_line_2_all_runs = [];
 
         for k = 1:10
+
+            arrival_distribution = build_arrival_distribution(duration(i), ...
+            peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
+            customer_matrix = build_customer_matrix(m, v, arrival_distribution);
+
             [line_1_wait_times, line_2_wait_times, num_people_exited_line_1, num_people_exited_line_2] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
             
             mean_line_1_wait_time_curr_run = mean(line_1_wait_times);

@@ -75,7 +75,6 @@ probabilities = counts/scaling; % Creates a vector of the probabilities of
 % a student arriving in each second
 
 T = zeros(1,duration);
-% Now we generate matrix T used in queueing.m 
 for i=1:(duration)
     random = rand(1);
     if random < probabilities(i)
@@ -94,4 +93,3 @@ if multi
 else 
     histogram(h1);
 end;
-
