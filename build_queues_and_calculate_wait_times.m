@@ -1,4 +1,4 @@
-function [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type, arrival_distribution)
+function [line_1_wait_times, line_2_wait_times, num_people_exited_line_1, num_people_exited_line_2] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type, arrival_distribution)
 
 % NOTE: I found that people were getting stuck in the line indefinitely :)
 % We should chat about how we want to fix this, but I did sanity check that
@@ -56,6 +56,9 @@ line_2_customer_numbers = [];
 line_1_prev_exit_time = 0;
 line_2_prev_exit_time = 0;
 
+num_people_exited_line_1 = 0;
+num_people_exited_line_2 = 0;
+
 for time = 1:length(arrival_distribution)
     did_customer_arrive = arrival_distribution(time);
     if did_customer_arrive
@@ -111,7 +114,7 @@ for time = 1:length(arrival_distribution)
             otherwise
                 "Please enter a valid scenario type!";
         end
-    end
+   end
 
    if line_1_order_times
         line_1_head_customer_number = line_1_customer_numbers(1); 
@@ -135,6 +138,7 @@ for time = 1:length(arrival_distribution)
             line_1_head_wait_time = round(line_1_head_exit_time - line_1_head_arrival_time  - line_1_head_order_time, 10);
             line_1_wait_times = [line_1_wait_times line_1_head_wait_time];
             disp(join(["exiting line 1 with wait time", line_1_head_wait_time]))
+            num_people_exited_line_1 = num_people_exited_line_1 + 1;
         end
     end
 
@@ -160,6 +164,7 @@ for time = 1:length(arrival_distribution)
             line_2_head_wait_time = round(line_2_head_exit_time - line_2_head_arrival_time  - line_2_head_order_time, 10);
             line_2_wait_times = [line_2_wait_times line_2_head_wait_time];
             disp(join(["exiting line 2 with wait time", line_2_head_wait_time]))
+            num_people_exited_line_2 = num_people_exited_line_2 + 1;
         end
     end
 

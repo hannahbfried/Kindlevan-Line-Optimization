@@ -34,6 +34,9 @@ all_line_2_median_data = {};
 all_line_1_std_data = {};
 all_line_2_std_data = {};
 
+all_line_1_exit_data = {};
+all_line_2_exit_data = {};
+
 % TODO: need to figure out how to build customer matrix without arrival distribution
 customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
@@ -54,7 +57,7 @@ for i = 1:num_arrival_distributions
         std_line_2_wait_times_all_runs = [];
 
         for k = 1:100
-            [line_1_wait_times, line_2_wait_times] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
+            [line_1_wait_times, line_2_wait_times, num_people_exited_line_1, num_people_exited_line_2] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
             
             mean_line_1_wait_time_curr_run = mean(line_1_wait_times);
             mean_line_2_wait_time_curr_run = mean(line_2_wait_times);
@@ -80,5 +83,8 @@ for i = 1:num_arrival_distributions
 
         all_line_1_std_data(i, j) = std_line_1_wait_times_all_runs;
         all_line_2_std_data(i, j) = std_line_2_wait_times_all_runs;
+
+        all_line_1_exit_data(i, j) = num_people_exited_line_1;
+        all_line_2_exit_data(i, j) = num_people_exited_line_2;
     end
 end
