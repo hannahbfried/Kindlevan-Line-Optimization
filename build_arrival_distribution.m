@@ -68,6 +68,7 @@ end
 
 % with this, we consistently get a little over 100 people in a 30 minute
 % span, which feels decently realistic to me?
+% PLAY WITH THIS - KAYLA
 scaling = 8*max(counts);
 % scaling = max(counts); - original
 probabilities = counts/scaling; % Creates a vector of the probabilities of 
@@ -83,3 +84,14 @@ for i=1:(duration)
         T(i) = 0;
     end
 end
+
+% Plotting (just for testing by Kayla, can delete later)
+if multi
+    histogram(h1);
+    hold on;
+    histogram(h2);
+    hold off;
+else 
+    histogram(h1);
+end;
+

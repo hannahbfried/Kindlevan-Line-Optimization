@@ -23,6 +23,7 @@ scenario_type = ["Base Two Line"];
 num_simulations = length(duration);
 
 for i = 1:length(num_simulations)
+    disp(["TEST, DURATION IS ", duration(i)]);
     arrival_distribution = build_arrival_distribution(duration(i), ...
         peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
     customer_matrix = build_customer_matrix(m(i), v(i), arrival_distribution);
