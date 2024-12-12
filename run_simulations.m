@@ -63,20 +63,14 @@ for i = 1:num_arrival_distributions
 
             [line_1_wait_times, line_2_wait_times, num_people_exited_line_1, num_people_exited_line_2] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
             
-            mean_line_1_wait_time_curr_run = mean(line_1_wait_times);
-            mean_line_2_wait_time_curr_run = mean(line_2_wait_times);
-            mean_line_1_wait_times_all_runs = [mean_line_1_wait_times_all_runs mean_line_1_wait_time_curr_run];
-            mean_line_2_wait_times_all_runs = [mean_line_2_wait_times_all_runs mean_line_2_wait_time_curr_run];
+            mean_line_1_wait_times_all_runs = [mean_line_1_wait_times_all_runs mean(line_1_wait_times)];
+            mean_line_2_wait_times_all_runs = [mean_line_2_wait_times_all_runs mean(line_2_wait_times)];
 
-            median_line_1_wait_time_curr_run = median(line_1_wait_times);
-            median_line_2_wait_time_curr_run = median(line_2_wait_times);
-            median_line_1_wait_times_all_runs = [median_line_1_wait_times_all_runs median_line_1_wait_time_curr_run];
-            median_line_2_wait_times_all_runs = [median_line_2_wait_times_all_runs median_line_2_wait_time_curr_run];
+            median_line_1_wait_times_all_runs = [median_line_1_wait_times_all_runs median(line_1_wait_times)];
+            median_line_2_wait_times_all_runs = [median_line_2_wait_times_all_runs median(line_2_wait_times)];
 
-            std_line_1_wait_time_curr_run = std(line_1_wait_times);
-            std_line_2_wait_time_curr_run = std(line_2_wait_times);
-            std_line_1_wait_times_all_runs = [std_line_1_wait_times_all_runs std_line_1_wait_time_curr_run];
-            std_line_2_wait_times_all_runs = [std_line_2_wait_times_all_runs std_line_2_wait_time_curr_run];
+            std_line_1_wait_times_all_runs = [std_line_1_wait_times_all_runs sstd(line_1_wait_times)];
+            std_line_2_wait_times_all_runs = [std_line_2_wait_times_all_runs std(line_2_wait_times)];
 
             num_exited_line_1_all_runs = [num_exited_line_1_all_runs num_people_exited_line_1];
             num_exited_line_2_all_runs = [num_exited_line_2_all_runs num_people_exited_line_2];
