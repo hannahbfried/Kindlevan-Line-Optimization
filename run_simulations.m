@@ -55,7 +55,7 @@ for i = 1:num_arrival_distributions
         num_exited_line_1_all_runs = [];
         num_exited_line_2_all_runs = [];
 
-        for k = 1:10
+        for k = 1:100
 
             arrival_distribution = build_arrival_distribution(duration(i), ...
             peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
