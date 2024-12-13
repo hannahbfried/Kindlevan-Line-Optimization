@@ -66,7 +66,7 @@ for i = 1:num_arrival_distributions
         max_length_line_1_all_runs = [];
         max_length_line_2_all_runs = [];
 
-        for k = 1:5
+        for k = 1:100
 
             customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
