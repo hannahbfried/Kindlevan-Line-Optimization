@@ -46,6 +46,8 @@ for i = 1:num_arrival_distributions
 
     for j = 1:length(scenario_type)
 
+        disp(join(["Scenario Type:", scenario_type(j), newline]))
+
         mean_line_1_wait_times_all_runs = [];
         mean_line_2_wait_times_all_runs = [];
 
@@ -61,7 +63,7 @@ for i = 1:num_arrival_distributions
         max_length_line_1_all_runs = [];
         max_length_line_2_all_runs = [];
 
-        for k = 1:2
+        for k = 1:100
 
             arrival_distribution = build_arrival_distribution(duration(i), ...
             peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
