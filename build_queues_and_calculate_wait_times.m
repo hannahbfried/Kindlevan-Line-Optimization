@@ -72,11 +72,6 @@ for time = 1:length(arrival_distribution)
         end
         % *** for testing
 
-        % Balking
-        if length(line_1_order_times) > 25 || length(line_2_order_times) > 25 % WE CAN CHANGE FROM 25
-            continue;
-        end
-
         switch scenario_type
             case "Base Two Line"
                 % if a customer has arrived, they will enter the shorter line
@@ -97,7 +92,7 @@ for time = 1:length(arrival_distribution)
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end 
             case "Meal Swipe Line"    
-                % Line 1 is the meal swipe line
+                % Line 1 is the non meal swipe line
                 if meal_swipe(customer_number)
                     line_1_order_times = [line_1_order_times total_order_time(customer_number)];
                     line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
@@ -106,7 +101,7 @@ for time = 1:length(arrival_distribution)
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end
             case "Verbal Request Line"
-                % Line 1 is the verbal request line
+                % Line 1 is the non verbal request line
                 if verbal_item_request(customer_number)
                     line_1_order_times = [line_1_order_times total_order_time(customer_number)];
                     line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
