@@ -37,6 +37,9 @@ all_line_2_std_data = {};
 all_line_1_exit_data = {};
 all_line_2_exit_data = {};
 
+all_line_1_length_data = {};
+all_line_2_length_data = {};
+
 % for every arrival distribution, run each scenario 100 times
 num_arrival_distributions = length(duration);
 for i = 1:num_arrival_distributions
@@ -55,13 +58,16 @@ for i = 1:num_arrival_distributions
         num_exited_line_1_all_runs = [];
         num_exited_line_2_all_runs = [];
 
-        for k = 1:100
+        max_length_line_1_all_runs = [];
+        max_length_line_2_all_runs = [];
+
+        for k = 1:2
 
             arrival_distribution = build_arrival_distribution(duration(i), ...
             peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
             customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
-            [line_1_wait_times, line_2_wait_times, num_people_exited_line_1, num_people_exited_line_2] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
+            [line_1_wait_times, line_2_wait_times, num_people_exited_line_1, num_people_exited_line_2, max_length_line_1, max_length_line_2] = build_queues_and_calculate_wait_times(customer_matrix, scenario_type(j), arrival_distribution);
             
             mean_line_1_wait_times_all_runs = [mean_line_1_wait_times_all_runs mean(line_1_wait_times)];
             mean_line_2_wait_times_all_runs = [mean_line_2_wait_times_all_runs mean(line_2_wait_times)];
@@ -69,11 +75,14 @@ for i = 1:num_arrival_distributions
             median_line_1_wait_times_all_runs = [median_line_1_wait_times_all_runs median(line_1_wait_times)];
             median_line_2_wait_times_all_runs = [median_line_2_wait_times_all_runs median(line_2_wait_times)];
 
-            std_line_1_wait_times_all_runs = [std_line_1_wait_times_all_runs sstd(line_1_wait_times)];
+            std_line_1_wait_times_all_runs = [std_line_1_wait_times_all_runs std(line_1_wait_times)];
             std_line_2_wait_times_all_runs = [std_line_2_wait_times_all_runs std(line_2_wait_times)];
 
             num_exited_line_1_all_runs = [num_exited_line_1_all_runs num_people_exited_line_1];
             num_exited_line_2_all_runs = [num_exited_line_2_all_runs num_people_exited_line_2];
+
+            max_length_line_1_all_runs = [max_length_line_1_all_runs max_length_line_1];
+            max_length_line_2_all_runs = [max_length_line_2_all_runs max_length_line_2];
        
         end
 
@@ -88,5 +97,9 @@ for i = 1:num_arrival_distributions
 
         all_line_1_exit_data{i, j} = num_exited_line_1_all_runs;
         all_line_2_exit_data{i, j} = num_exited_line_2_all_runs;
+
+        all_line_1_length_data{i, j} = max_length_line_1_all_runs;
+        all_line_2_length_data{i, j} = max_length_line_2_all_runs;
+
     end
 end
