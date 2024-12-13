@@ -18,7 +18,7 @@ multi = [1, 1, 1, 0, 0];
 m = 0.75;
 v = 0.33;
 
-scenario_type = ["Base Two Line", "Express Line", ...
+scenario_type = ["Base Two Line", "Express Line", "Optional Meal Swipe Line", ...
                   "Meal Swipe Line", "Verbal Request Line"];
 
 % all data will be a table of dimensions ixj

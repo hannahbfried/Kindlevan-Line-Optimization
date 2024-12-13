@@ -84,13 +84,26 @@ for time = 1:length(arrival_distribution)
                 end
             case "Express Line"
                 % Line 1 is the express line for 1 item
-                if num_items(customer_number) == 1
+                if num_items(customer_number) <= 2
                     line_1_order_times = [line_1_order_times total_order_time(customer_number)];
                     line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
                 else
                     line_2_order_times = [line_2_order_times total_order_time(customer_number)];
                     line_2_customer_numbers = [line_2_customer_numbers customer_number];
                 end 
+            case "Optional Meal Swipe Line"
+                if meal_swipe(customer_number) % not a meal swipe
+                    line_1_order_times = [line_1_order_times total_order_time(customer_number)];
+                    line_1_customer_numbers = [line_1_customer_numbers customer_number]; 
+                else 
+                    if length(line_1_order_times) < length(line_2_order_times)
+                        line_1_order_times = [line_1_order_times total_order_time(customer_number)];
+                        line_1_customer_numbers = [line_1_customer_numbers customer_number]; % WOULD THIS NOT JUST BE INTEGERS 1, 2, ... 
+                    else
+                        line_2_order_times = [line_2_order_times total_order_time(customer_number)];
+                        line_2_customer_numbers = [line_2_customer_numbers customer_number];
+                    end
+                end
             case "Meal Swipe Line"    
                 % Line 1 is the non meal swipe line
                 if meal_swipe(customer_number)
