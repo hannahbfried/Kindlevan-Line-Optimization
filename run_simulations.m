@@ -40,12 +40,15 @@ all_line_2_exit_data = {};
 all_line_1_length_data = {};
 all_line_2_length_data = {};
 
+avg_num_customers_each_arrival_distribution = {};
+
 % for every arrival distribution, run each scenario 100 times
 num_arrival_distributions = length(duration);
 for i = 1:num_arrival_distributions
 
-    arrival_distribution = build_arrival_distribution(duration(i), ...
-            peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
+    sum_arrival_distributions = [];
+
+    disp(join(["sum of arrival distribution is ", sum(arrival_distribution), "for arrival dist ", i]))
 
     for j = 1:length(scenario_type)
 
@@ -67,6 +70,11 @@ for i = 1:num_arrival_distributions
         max_length_line_2_all_runs = [];
 
         for k = 1:100
+
+            arrival_distribution = build_arrival_distribution(duration(i), ...
+            peak1(i), peak2(i), peak1width(i), peak2width(i), multi(i));
+
+            sum_arrival_distributions = [sum_arrival_distributions sum(arrival_distribution)];
 
             customer_matrix = build_customer_matrix(m, v, arrival_distribution);
 
@@ -103,6 +111,8 @@ for i = 1:num_arrival_distributions
 
         all_line_1_length_data{i, j} = max_length_line_1_all_runs;
         all_line_2_length_data{i, j} = max_length_line_2_all_runs;
+
+        avg_num_customers_each_arrival_distribution{1, i} = mean(sum_arrival_distributions);
 
     end
 end
