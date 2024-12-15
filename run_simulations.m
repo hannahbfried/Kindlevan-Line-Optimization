@@ -48,8 +48,6 @@ for i = 1:num_arrival_distributions
 
     sum_arrival_distributions = [];
 
-    disp(join(["sum of arrival distribution is ", sum(arrival_distribution), "for arrival dist ", i]))
-
     for j = 1:length(scenario_type)
 
         disp(join(["Scenario Type:", scenario_type(j), newline]))
