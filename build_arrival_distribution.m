@@ -62,7 +62,7 @@ else
     counts = counts1;
 end
 
-scaling = sum(counts)/150;
+scaling = sum(counts)/120;
 probabilities = counts/scaling; % Creates a vector of the probabilities of 
 % a student arriving in each second
 
